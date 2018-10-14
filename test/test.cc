@@ -1,35 +1,54 @@
 #include "allocator.h"
-#include <iostream>
+#include <gtest/gtest.h>
 
-struct Foo {
-	Foo(const Foo &rhs)
-		: a(rhs.a)
-		, b(rhs.b)
+struct Foo
+{
+	Foo()
+		: a(-1), b(-1)
 	{
-		std::cout << "copy ctor\n";
+	}
+
+	Foo(const Foo &rhs)
+		: a(rhs.a), b(rhs.b)
+	{
 	}
 
 	Foo(int x, int y)
-		: a(x)
-		, b(y)
+		: a(x), b(y)
 	{
-		std::cout << "ctor(" << x << "," << y << ")\n";
 	}
 
 	~Foo()
 	{
-		std::cout << "dtor\n";
+		a = -2;
+		b = -2;
 	}
 
 	int a;
 	int b;
 };
 
-int main()
+TEST(TEST_ALLOCATOR, test_with_struct)
 {
 	xtl::Allocator<Foo> al;
-	Foo* fo = al.allocate(1);
+	Foo *fo = al.allocate(1);
 	al.construct(fo, 1, 2);
+	EXPECT_EQ(fo->a, 1);
+	EXPECT_EQ(fo->b, 2);
+
+	al.construct(fo);
+	EXPECT_EQ(fo->a, -1);
+	EXPECT_EQ(fo->b, -1);
+
 	al.destroy(fo);
+	EXPECT_EQ(fo->a, -2);
+	EXPECT_EQ(fo->b, -2);
+
 	al.deallocate(fo);
+}
+
+int main(int argc, char **argv)
+{
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
