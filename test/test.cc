@@ -47,6 +47,22 @@ TEST(TEST_ALLOCATOR, test_with_struct)
 	al.deallocate(fo);
 }
 
+TEST(TEST_ALLOCATOR, test_with_char)
+{
+	xtl::Allocator<char> al;
+	char *pc = al.allocate(1);
+	al.construct(pc, 'a');
+	EXPECT_EQ(*pc, 'a');
+	al.destroy(pc);
+	al.deallocate(pc);
+}
+
+TEST(TEST_ALLOCATOR, test_with_void)
+{
+	EXPECT_EQ(typeid(void), typeid(xtl::Allocator<void>::value_type));
+	EXPECT_EQ(typeid(void *), typeid(xtl::Allocator<void>::pointer));
+}
+
 int main(int argc, char **argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
