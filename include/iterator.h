@@ -76,6 +76,12 @@ class input_iterator
 template <class T, class Distance = std::ptrdiff_t>
 class istream_iterator : public input_iterator<T, Distance>
 {
+    template <class TT, class DD>
+    friend bool operator==(const istream_iterator<TT, DD> &x, const istream_iterator<TT, DD> &y);
+
+    template <class TT, class DD>
+    friend bool operator!=(const istream_iterator<TT, DD> &x, const istream_iterator<TT, DD> &y);
+
   public:
     using difference_type = Distance;
     using value_type = T;
@@ -143,33 +149,19 @@ class istream_iterator : public input_iterator<T, Distance>
 
         return tmp;
     }
-
-    bool operator!=(const istream_iterator<T, Distance> &x)
-    {
-        return !(*this == x);
-    }
-
-    bool operator==(const xtl::istream_iterator<T, Distance> &y)
-    {
-        return is == y.is && having_slot == y.having_slot;
-    }
 };
 
-/*
 template <class T, class Distance>
 inline bool operator==(const xtl::istream_iterator<T, Distance> &x, const xtl::istream_iterator<T, Distance> &y)
 {
-    return x.val == y.val;
+    return x.is == y.is && x.having_slot == y.having_slot;
 }
-*/
 
-/*
 template <class T, class Distance>
 inline bool operator!=(const xtl::istream_iterator<T, Distance> &x, const xtl::istream_iterator<T, Distance> &y)
 {
-    return true;
+    return !(x == y);
 }
-*/
 
 } // namespace xtl
 
