@@ -13,8 +13,7 @@ struct Foo
 	{
 	}
 
-	Foo(int x, int y)
-		: a(x), b(y)
+	Foo(int x, int y) : a(x), b(y)
 	{
 	}
 
