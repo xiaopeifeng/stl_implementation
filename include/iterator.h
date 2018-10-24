@@ -2,7 +2,6 @@
 #define _ITERATOR_H_
 
 #include <cstddef> // for std::ptrdiff_t
-#include <istream>
 #include <iostream>
 
 namespace xtl
@@ -71,6 +70,10 @@ class input_iterator
   private:
     pointer ptr;
     */
+};
+
+class output_iterator
+{
 };
 
 template <class T, class Distance = std::ptrdiff_t>
@@ -162,6 +165,62 @@ inline bool operator!=(const xtl::istream_iterator<T, Distance> &x, const xtl::i
 {
     return !(x == y);
 }
+
+template <class T>
+class ostream_iterator : public output_iterator
+{
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+    using iterator_category = output_iterator_tag;
+
+  public:
+    ostream_iterator()
+        : os(&std::cout)
+    {
+    }
+
+    ostream_iterator(std::ostream &stream)
+        : os(&stream)
+    {
+    }
+
+    ostream_iterator(std::ostream &stream, const char *delim)
+        : os(&stream), delim_internal(delim)
+    {
+    }
+
+    ostream_iterator &operator=(const T &val)
+    {
+        *os << val;
+        if (!delim_internal.empty())
+        {
+            *os << delim_internal;
+        }
+
+        return *this;
+    }
+
+    ostream_iterator &operator*()
+    {
+        return *this;
+    }
+
+    ostream_iterator &operator++()
+    {
+        return *this;
+    }
+
+    ostream_iterator &operator++(int)
+    {
+        return *this;
+    }
+
+  protected:
+    std::ostream *os;
+    std::string delim_internal;
+};
 
 } // namespace xtl
 
