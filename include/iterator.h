@@ -77,6 +77,21 @@ class output_iterator
 };
 
 template <class T, class Distance = std::ptrdiff_t>
+class forward_iterator
+{
+};
+
+template <class T, class Distance = std::ptrdiff_t>
+class bidirectional_iterator
+{
+};
+
+template <class T, class Distance = std::ptrdiff_t>
+class random_access_iterator
+{
+};
+
+template <class T, class Distance = std::ptrdiff_t>
 class istream_iterator : public input_iterator<T, Distance>
 {
     template <class TT, class DD>
@@ -220,6 +235,86 @@ class ostream_iterator : public output_iterator
   protected:
     std::ostream *os;
     std::string delim_internal;
+};
+
+template <class Container>
+class back_inserter_iterator : output_iterator
+{
+  public:
+    explicit back_inserter_iterator(Container &c)
+        : ptr(&c)
+    {
+    }
+
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+    using iterator_category = xtl::output_iterator_tag;
+
+    back_inserter_iterator<Container> &operator=(typename Container::const_reference value)
+    {
+        ptr->push_back(value);
+        return *this;
+    }
+
+    back_inserter_iterator<Container> &operator*()
+    {
+        return *this;
+    }
+
+    back_inserter_iterator<Container> &operator++()
+    {
+        return *this;
+    }
+
+    back_inserter_iterator<Container> &operator++(int)
+    {
+        return *this;
+    }
+
+  protected:
+    Container *ptr;
+};
+
+template <class Container>
+class front_inserter_iterator : output_iterator
+{
+  public:
+    explicit front_inserter_iterator(Container &c)
+        : ptr(&c)
+    {
+    }
+
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+    using iterator_category = xtl::output_iterator_tag;
+
+    front_inserter_iterator<Container> &operator=(typename Container::const_reference value)
+    {
+        ptr->push_front(value);
+        return *this;
+    }
+
+    front_inserter_iterator<Container> &operator*()
+    {
+        return *this;
+    }
+
+    front_inserter_iterator<Container> &operator++()
+    {
+        return *this;
+    }
+
+    front_inserter_iterator<Container> &operator++(int)
+    {
+        return *this;
+    }
+
+  protected:
+    Container *ptr;
 };
 
 } // namespace xtl
