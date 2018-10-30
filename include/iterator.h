@@ -40,36 +40,6 @@ struct iterator_traits
 template <class T, class Distance>
 class input_iterator
 {
-    /*
-    using difference_type = typename Container::difference_type;
-    using value_type = typename Container::value_type;
-    using pointer = typename Container::pointer;
-    using reference = typename Container::reference;
-    using iterator_category = input_iterator_tag;
-
-    reference operator*()
-    {
-        return val;
-    }
-
-    reference operator->()
-    {
-        return val;
-    }
-
-    reference operator++()
-    {
-        return ptr++;
-    }
-
-    reference operator++(int)
-    {
-        return ++ptr;
-    }
-
-  private:
-    pointer ptr;
-    */
 };
 
 class output_iterator
@@ -357,6 +327,79 @@ class inserter_iterator : output_iterator
   protected:
     Container *ptr;
     typename Container::iterator iter;
+};
+
+template <class Iterator>
+class reverse_iterator
+{
+  public:
+    using iterator_type = Iterator;
+    using iterator_category = typename iterator_traits<Iterator>::iterator_category;
+    using value_type = typename iterator_traits<Iterator>::value_type;
+    using difference_type = typename iterator_traits<Iterator>::difference_type;
+    using pointer = typename iterator_traits<Iterator>::pointer;
+    using reference = typename iterator_traits<Iterator>::reference;
+
+    constexpr reverse_iterator()
+    {
+    }
+
+    explicit reverse_iterator(iterator_type iter)
+        : current(iter)
+    {
+    }
+
+    iterator_type base() const
+    {
+        return current;
+    }
+
+    reference operator*() const
+    {
+        iterator_type iter_tmp = current;
+        return *--iter_tmp;
+    }
+
+    reverse_iterator &operator++()
+    {
+        current--;
+        return *this;
+    }
+
+    reverse_iterator operator++(int)
+    {
+        auto iter_tmp = *this;
+        current--;
+        return iter_tmp;
+    }
+
+    reverse_iterator &operator--()
+    {
+        current++;
+        return *this;
+    }
+
+    reverse_iterator operator--(int)
+    {
+        auto iter_tmp = *this;
+        current++;
+        return iter_tmp;
+    }
+
+    reverse_iterator operator+(difference_type n) const
+    {
+        current -= n;
+        return *this;
+    }
+
+    reverse_iterator &operator+=(difference_type n)
+    {
+        current -= n;
+        return *this;
+    }
+
+  protected:
+    iterator_type current;
 };
 
 } // namespace xtl
