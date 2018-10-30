@@ -317,6 +317,48 @@ class front_inserter_iterator : output_iterator
     Container *ptr;
 };
 
+template <class Container>
+class inserter_iterator : output_iterator
+{
+  public:
+    inserter_iterator(Container &c, typename Container::iterator i)
+        : ptr(&c), iter(i)
+    {
+    }
+
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+    using iterator_category = xtl::output_iterator_tag;
+
+    inserter_iterator<Container> &operator=(typename Container::const_reference value)
+    {
+        iter = ptr->insert(iter, value);
+        iter++;
+        return *this;
+    }
+
+    inserter_iterator<Container> &operator*()
+    {
+        return *this;
+    }
+
+    inserter_iterator<Container> &operator++()
+    {
+        return *this;
+    }
+
+    inserter_iterator<Container> &operator++(int)
+    {
+        return *this;
+    }
+
+  protected:
+    Container *ptr;
+    typename Container::iterator iter;
+};
+
 } // namespace xtl
 
 #endif
